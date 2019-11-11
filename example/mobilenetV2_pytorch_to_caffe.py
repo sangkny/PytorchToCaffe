@@ -10,7 +10,7 @@ from MobileNetV2 import MobileNetV2
 if __name__ == '__main__':
     name = 'MobileNetV2'
     net= MobileNetV2()
-    checkpoint = torch.load("/home/shining/Downloads/mobilenet_v2.pth.tar")
+    checkpoint = torch.load("./mobilenet_v2.pth.tar")
 
     net.load_state_dict(checkpoint)
     net.eval()
