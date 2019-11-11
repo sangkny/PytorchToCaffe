@@ -1,5 +1,5 @@
 # The given code is mainly forked from https://github.com/xxradon/PytorchToCaffe
-# I just modified some functions to fit for my customized pytorch model.
+I just modified some functions to fit for my customized pytorch model.
 
 # The code is mainly come from [nn_tools](https://github.com/hahnyuan/nn_tools).Thanks for hahnyuan's contribution.
 # Neural Network Tools: Converter and Analyser
