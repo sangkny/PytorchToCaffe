@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     net.load_state_dict(checkpoint)
     net.eval()
-    input = torch.ones([1, 3, 224, 224])
+    input = torch.ones([1, 3, 32, 32])
     # input=torch.ones([1,3,224,224])
     pytorch_to_caffe.trans_net(net, input, name)
     pytorch_to_caffe.save_prototxt('{}.prototxt'.format(name))

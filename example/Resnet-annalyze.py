@@ -33,7 +33,7 @@ if __name__=="__main__":
     parser.add_argument('--path',help='python file location',default = "MGN_analysis_example.py",type=str)
     parser.add_argument('--name',help='the class name or instance name in your python file',default = "mgn",type=str)
     parser.add_argument('--shape',help='input shape of the network(split by comma `,`), image shape should be: batch,c,h,w',type=str)
-    parser.add_argument('--out',help='path to save the csv file',default='pytorch_analyse.csv',type=str)
+    parser.add_argument('--out',help='path to save the csv file',default='./tmp/pytorch_analyse.csv',type=str)
     parser.add_argument('--class_args',help='args to init the class in python file',default='net',type=str)
 
     args=parser.parse_args()

@@ -10,7 +10,8 @@ def profiling(net, input=None):
         blob_dict = OrderedDict(input)
         not_ref = [input[k] for k in input]
     else:
-        blob_dict = OrderedDict({'data': input})
+        blob_dict = OrderedDict({'data': input}) # sangkny fix
+        # blob_dict = OrderedDict({'blob1': input})  # for the input
         not_ref=[input]
     for i, layer in enumerate(net.net.layer):
         out = None

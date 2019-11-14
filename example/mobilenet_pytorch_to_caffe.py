@@ -28,7 +28,7 @@ def load_model(input_size, device='cpu'):
 if __name__ == '__main__':
     input_size =64
     number_classes =2
-    name = 'MobileNet'
+    name = 'MobileNet{}x{}'.format(input_size,input_size)
 
     #hardware setting
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     net = net.to(device)
 
     # load a pre-trained pyTorch model
-    checkpoint = torch.load("./ckpt_123_99.970.pth")
+    checkpoint = torch.load("./best_ckpt_64x64_20190829.pth")
     net.load_state_dict(checkpoint['weight'])
 
     # if u want to use cpu, then you need to do something

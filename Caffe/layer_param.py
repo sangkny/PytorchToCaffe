@@ -1,3 +1,5 @@
+#coding=utf-8
+
 from __future__ import absolute_import
 from . import caffe_pb2 as pb
 import numpy as np
