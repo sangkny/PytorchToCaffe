@@ -17,7 +17,7 @@ Command：`python caffe_analyser.py [-h] prototxt outdir shape`
 For example `python caffe_analyser.py resnet_18_deploy.prototxt analys_result.csv 1,3,224,224`
 """
 
-if __name__=="__main__":
+if __name__ == "__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('prototxt',help='path of the prototxt file',type=str)
     parser.add_argument('outdir',help='path to save the csv file',type=str)

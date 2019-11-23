@@ -1,6 +1,6 @@
 # 2018.09.06 by Shining 
-import sys
-sys.path.insert(0,'/home/shining/Projects/github-projects/caffe-project/caffe/python')
+#import sys
+#sys.path.insert(0,'/home/shining/Projects/github-projects/caffe-project/caffe/python')
 import caffe
 import torchvision.transforms as transforms
 import numpy as np
@@ -11,8 +11,6 @@ from torch.autograd import Variable
 from torch.nn.parameter import Parameter
 from torchvision.models import resnet
 import time
-
-
 
 import cv2
 

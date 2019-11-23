@@ -1,3 +1,4 @@
+#coding=utf-8
 import torch
 import torch.nn as nn
 import traceback
@@ -19,7 +20,7 @@ How to support a new layer type:
  
 Please MUTE the inplace operations to avoid not find in graph
 
-注意：只有torch.nn.functional中的函数才能转换为caffe中的层
+注意：只?�torch.nn.functional�?��?�数?�能转换为caffe�?���?
 """
 
 # TODO: support the inplace output of the layers
@@ -36,7 +37,7 @@ class Blob_LOG():
 
 NET_INITTED=False
 
-# 转换原理解析：通过记录
+# 转换?�理解析：通过记录
 class TransLog(object):
     def __init__(self):
         """
@@ -92,6 +93,9 @@ class TransLog(object):
             return self._blobs[var]
         except:
             print("WARNING: CANNOT FOUND blob {}".format(var))
+            print("===\n WARNING: CANNOT FOUND blob at layer {}, this may cause a NoneType Error. "
+                  "This may caused by the previous operation which produce the blob(tensor) is not implemented in nn_tools. "
+                  "You can issue this at https://github.com/hahnyuan/nn_tools/issues. \n===".format(var))
             return None
 
 log=TransLog()
@@ -382,11 +386,11 @@ def _instance_norm(raw, input, running_mean=None, running_var=None, weight=None,
 
 #upsample layer
 def _interpolate(raw, input,size=None, scale_factor=None, mode='nearest', align_corners=None):
-    # 定义的参数包括 scale,即输出与输入的尺寸比例,如 2;scale_h、scale_w,
-    # 同 scale,分别为 h、w 方向上的尺寸比例;pad_out_h、pad_out_w,仅在 scale 为 2 时
-    # 有用,对输出进行额外 padding 在 h、w 方向上的数值;upsample_h、upsample_w,输
-    # 出图像尺寸的数值。在 Upsample 的相关代码中,推荐仅仅使用 upsample_h、
-    # upsample_w 准确定义 Upsample 层的输出尺寸,其他所有的参数都不推荐继续使用。
+    # 定义?�参?�包??scale,?�输?�与输入?�尺寸比�?�?2;scale_h?�scale_w,
+    # ??scale,?�别�?h?�w ?�向上的尺�?比例;pad_out_h?�pad_out_w,仅在 scale �?2 ??
+    # ?�用,对输?�进行额�?padding ??h?�w ?�向上的?��?upsample_h?�upsample_w,�?
+    # ?�图?�尺寸的?�值。在 Upsample ?�相?�代?�中,?�荐仅仅使用 upsample_h??
+    # upsample_w ?�确定义 Upsample 层的输出尺�?,?�他?�?�的?�数?�不?�荐继续使用??
     # for nearest _interpolate
     if mode != "nearest" or align_corners != None:
         raise NotImplementedError("not implement F.interpolate totoaly")
@@ -406,9 +410,9 @@ def _interpolate(raw, input,size=None, scale_factor=None, mode='nearest', align_
 def _sigmoid(raw, input):
     # Applies the element-wise function:
     # 
-    # Sigmoid(x)= 1/(1+exp(−x)）
+    # Sigmoid(x)= 1/(1+exp(?�x)�?
     # 
-    # ​	
+    # ??
     x = raw(input)
     name = log.add_layer(name='sigmoid')
     log.add_blobs([x], name='sigmoid_blob')
@@ -422,7 +426,7 @@ def _tanh(raw, input):
     # 
     # torch.nn.Tanh
     # 
-    # ​	
+    # ??
     x = raw(input)
     name = log.add_layer(name='tanh')
     log.add_blobs([x], name='tanh_blob')
@@ -435,7 +439,7 @@ def _hardtanh(raw, input, min_val, max_val, inplace):
     #
     # torch.nn.ReLu6
     #
-    # ​
+    # ??
     print('relu6: ', log.blobs(input))
     x = raw(input, min_val, max_val)
     name = log.add_layer(name='relu6')
@@ -451,7 +455,7 @@ def _l2Norm(raw, input, weight, eps):
     #
     # L2Norm in vgg_ssd
     #
-    # ​
+    # ??
     x = raw(input, weight, eps)
     name = log.add_layer(name='normalize')
     log.add_blobs([x], name='normalize_blob')
@@ -642,7 +646,7 @@ def _expand_as(input, *args):
 
 
 
-# 核心组件，通过该类，实现对torch的function中的operators的输入，输出以及参数的读取
+# ?�心组件，通过该类，实?��?torch?�function�?��operators?�输?�，输出以及?�数?��???
 class Rp(object):
     def __init__(self,raw,replace,**kwargs):
         # replace the raw function to replace function
