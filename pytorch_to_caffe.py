@@ -68,7 +68,7 @@ class TransLog(object):
             print("{} was added to layers".format(self.layers[name]))
         return self.layers[name]
 
-    def add_blobs(self, blobs,name='blob',with_num=True):
+    def add_blobs(self, blobs,name='data',with_num=True):
         rst=[]
         for blob in blobs:
             self._blobs_data.append(blob) # to block the memory address be rewrited
@@ -87,8 +87,8 @@ class TransLog(object):
         return rst
     def blobs(self, var):
         var=id(var)
-        # if self.debug:
-        #     print("{}:{} getting".format(var, self._blobs[var]))
+        if self.debug:
+            print("{}:{} getting".format(var, self._blobs[var]))
         try:
             return self._blobs[var]
         except:
@@ -643,9 +643,6 @@ def _expand_as(input, *args):
     log.add_blobs([x], name='expand_as_blob')
     return x
 
-
-
-
 # ?�心组件，通过该类，实?��?torch?�function�?��operators?�输?�，输出以及?�数?��???
 class Rp(object):
     def __init__(self,raw,replace,**kwargs):
@@ -667,9 +664,6 @@ class Rp(object):
         # if isinstance(out,Variable):
         #     out=[out]
         return out
-
-
-
 
 F.conv2d=Rp(F.conv2d,_conv2d)
 F.linear=Rp(F.linear,_linear)

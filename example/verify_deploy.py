@@ -10,24 +10,49 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.nn.parameter import Parameter
 from torchvision.models import resnet
+from lenet import LeNet
 import time
 
 import cv2
 
 #caffe load formate
-def load_image_caffe(imgfile):
-    image = caffe.io.load_image(imgfile)
-    transformer = caffe.io.Transformer({'data': (1, 3, args.height, args.width)})
-    transformer.set_transpose('data', (2, 0, 1))
-    transformer.set_mean('data', np.array([args.meanB, args.meanG, args.meanR]))
-    transformer.set_raw_scale('data', args.scale)
-    transformer.set_channel_swap('data', (2, 1, 0))
+# def load_image_caffe(imgfile):
+#     image = caffe.io.load_image(imgfile)
+#     transformer = caffe.io.Transformer({'data': (1, 3, args.height, args.width)})
+#     transformer.set_transpose('data', (2, 0, 1))
+#     transformer.set_mean('data', np.array([args.meanB, args.meanG, args.meanR]))
+#     transformer.set_raw_scale('data', args.scale)
+#     transformer.set_channel_swap('data', (2, 1, 0))
+#
+#     image = transformer.preprocess('data', image)
+#     image = image.reshape(1, 3, args.height, args.width)
+#     return image
 
-    image = transformer.preprocess('data', image)
-    image = image.reshape(1, 3, args.height, args.width)
+def load_image_caffe(imgfile, color_input=False):
+    input_color = color_input
+    image = caffe.io.load_image(imgfile, color=input_color)
+    if input_color:
+        transformer = caffe.io.Transformer({'data': (1, 3, args.height, args.width)}) # sangkny was (1,3, args.height, args.width) is color image
+        transformer.set_transpose('data', (2, 0, 1))
+        transformer.set_mean('data', np.array([args.meanB, args.meanG, args.meanR]))
+        #transformer.set_mean('data', np.array([128]))
+        transformer.set_raw_scale('data', args.scale)
+        transformer.set_channel_swap('data', (2, 1, 0))
+        image = transformer.preprocess('data', image)
+        image = image.reshape(1, 3, args.height, args.width)
+    else:
+        transformer = caffe.io.Transformer({'data': (1, 1, args.height, args.width)})  # sangkny was (1,3, args.height, args.width) is color image
+        #transformer.set_transpose('data', (2, 0, 1))
+        #transformer.set_mean('data', np.array([args.meanB, args.meanG, args.meanR]))
+        transformer.set_mean('data', np.array([args.meanB]))
+        transformer.set_raw_scale('data', args.scale)
+        #transformer.set_channel_swap('data', (2, 1, 0))
+        image = transformer.preprocess('data', image)
+        image = image.reshape(1, 1, args.height, args.width)
+
     return image
 
-def load_image_pytorch(imgfile):
+def load_image_pytorch(imgfile, input_color = False):
     
     # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
     #                                  std=[0.229, 0.224, 0.225])
@@ -42,31 +67,38 @@ def load_image_pytorch(imgfile):
     # img = cv2.resize(img,(224,244))
     # img1 = transform1(img) # 归一化到 [0.0,1.0]
     # print("img1 = ",img1)
+    if(input_color):
+        img = np.ones([1,3,args.height, args.width])
+    else:
+        img = np.ones([1, 1, args.height, args.width])
 
-    img = np.ones([1,3,args.height, args.width])
     # 转化为numpy.ndarray并显示
     return img
 
 
 
 def forward_pytorch(weightfile, image):
-    net=resnet.resnet18()
+    #net=resnet.resnet18()
+    #net = resnet.resnet18()
+    net=LeNet(1,2)
     checkpoint = torch.load(weightfile)
-    net.load_state_dict(checkpoint)
+    net.load_state_dict(checkpoint['weight'])
+    net.double()                # to double
     if args.cuda:
         net.cuda()
     print(net)
     net.eval()
-    image = torch.from_numpy(image)
+    image = torch.from_numpy(image.astype(np.float64)) # to double
+
     if args.cuda:
         image = Variable(image.cuda())
     else:
         image = Variable(image)
     t0 = time.time()
     blobs = net.forward(image)
-    #print(blobs.data.numpy().flatten())
+    print(blobs.data.numpy().flatten())
     t1 = time.time()
-    return t1-t0, blobs, net.parameters()
+    return t1-t0, blobs, net, torch.from_numpy(blobs.data.numpy())
 
 # Reference from:
 def forward_caffe(protofile, weightfile, image):
@@ -76,8 +108,8 @@ def forward_caffe(protofile, weightfile, image):
     else:
         caffe.set_mode_cpu()
     net = caffe.Net(protofile, weightfile, caffe.TEST)
-    net.blobs['blob1'].reshape(1, 3, args.height, args.width)
-    net.blobs['blob1'].data[...] = image
+    net.blobs['data'].reshape(1, 1, args.height, args.width)
+    net.blobs['data'].data[...] = image
     t0 = time.time()
     output = net.forward()
     t1 = time.time()
@@ -106,8 +138,11 @@ if __name__ == '__main__':
     weightfile = args.weightfile
     imgfile = args.imgfile
 
-    image = load_image_pytorch(imgfile)
-    time_pytorch, pytorch_blobs, pytorch_models,out_Tensor_pytorch = forward_pytorch(args.model, image)
+
+    #image = load_image_pytorch(imgfile)
+    image = load_image_caffe(imgfile)
+    time_pytorch, pytorch_blobs, pytorch_models, out_Tensor_pytorch = forward_pytorch(args.model, image)
+
     time_caffe, caffe_blobs, caffe_params,out_Tensor_caffe = forward_caffe(protofile, weightfile, image)
 
     print('pytorch forward time %d', time_pytorch)

@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, '.')
 import torch
 from torch.autograd import Variable
-from torchvision.models import resnet
+#from torchvision.models import resnet
 import pytorch_to_caffe
 from lenet import LeNet
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     input_size_w = 40
     number_classes =2
     in_channel = 1
-    name = 'LeNet{}x{}'.format(input_size_h,input_size_w)
+    name = 'LeNet{}x{}_1'.format(input_size_h,input_size_w)
 
     #hardware setting
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
