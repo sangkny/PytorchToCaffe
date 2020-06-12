@@ -684,6 +684,8 @@ F.tanh = Rp(F.tanh,_tanh)
 F.tanh = Rp(F.tanh,_tanh)
 F.hardtanh = Rp(F.hardtanh,_hardtanh)
 # F.l2norm = Rp(F.l2norm,_l2Norm)
+# sangkny for Eltwise
+
 
 torch.split=Rp(torch.split,_split)
 torch.max=Rp(torch.max,_max)

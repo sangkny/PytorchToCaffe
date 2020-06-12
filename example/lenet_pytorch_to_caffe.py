@@ -31,7 +31,8 @@ if __name__ == '__main__':
     input_size_w = 40
     number_classes =2
     in_channel = 1
-    name = 'LeNet{}x{}_1'.format(input_size_h,input_size_w)
+    int_version = 4
+    name = 'LeNet{}x{}_{}'.format(input_size_h,input_size_w, int_version)
 
     #hardware setting
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -43,7 +44,8 @@ if __name__ == '__main__':
     net = net.to(device)
 
     # load a pre-trained pyTorch model
-    checkpoint = torch.load("./lenet32x40_ckpt_261_98.420958.pth")
+    #checkpoint = torch.load("./lenet32x40_ckpt_0_60.667504.pth")
+    checkpoint = torch.load("./ckpt_32x40_lenet_3_277_99.206645.pth")
     net.load_state_dict(checkpoint['weight'])
 
     # if u want to use cpu, then you need to do something

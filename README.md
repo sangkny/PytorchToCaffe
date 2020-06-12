@@ -1,7 +1,8 @@
 # The given code is mainly forked from https://github.com/xxradon/PytorchToCaffe
 I just modified some functions to fit for my customized pytorch model.
 1. mobilenet v1 is added and tested under pyTorch 1.2.0 (conda environment file at https://anaconda.org/sangkny/py3.6-torch1.2-caffe-gpu/files) 
-2. 
+2. lenet_attention.py : lenet + attention but can not be converted to caffe.
+3. Thus, I come back to original lenet(nexquad) caffe lenet_pytorch_to_caffe.py
 
 # The code is mainly come from [nn_tools](https://github.com/hahnyuan/nn_tools).Thanks for hahnyuan's contribution.
 # Neural Network Tools: Converter and Analyser

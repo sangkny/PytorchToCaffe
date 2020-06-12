@@ -27,9 +27,9 @@ class LeNet(nn.Module):
         super(LeNet, self).__init__()
         self.conv1 = nn.Conv2d(in_planes, 6, 5)
         self.conv2 = nn.Conv2d(6, 16, 5)
-        self.layer1 = self._make_layer(in_planes, 14)   # 14 : 1/2 of last filter size 28
-        self.layer2 = self._make_layer(14, 28)          # here fileter size max: 29 is max
-        self.layer3 = self._make_layer(64, 128)         # Ths layer can not be used due to the size of input
+        self.layer1 = self._make_layer(in_planes, 50)   # 14 : 1/2 of last filter size 28 (v2.{14}, v3.{50})
+        self.layer2 = self._make_layer(50, 28)          # here fileter size max: 29 is max
+        self.layer3 = self._make_layer(48, 40)         # Ths layer can not be used due to the size of input (v2.{64 128} v3.{48, 40}).
         #self.fc1   = nn.Linear(16*5*5, 120)
         #self.fc1 = nn.Linear(128*5*7, 256)
         self.fc1 = nn.Linear(28 * 5 * 7, 256)           # according to the above settings
